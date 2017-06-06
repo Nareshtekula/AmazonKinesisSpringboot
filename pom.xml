@@ -15,8 +15,8 @@
 		<dynamodb-local.endpoint>http://localhost:${dynamodb-local.port}</dynamodb-local.endpoint>
 		<aws.java.sdk.version>1.11.115</aws.java.sdk.version>
 		<aws-java-sdk.version>1.11.115</aws-java-sdk.version>
-		<aws.dynamodblocal.version>[1.11.86,2.0)</aws.dynamodblocal.version>
-		<amazon.kinesis-client-library.version>1.7.3</amazon.kinesis-client-library.version>
+		<aws.dynamodblocal.version>1.11.86</aws.dynamodblocal.version>
+		<amazon.kinesis-client-library.version>1.7.5</amazon.kinesis-client-library.version>
 		<amazon.kinesis-connectors.version>1.3.0</amazon.kinesis-connectors.version>
 		<dynamodb-streams-kinesis-adapter.version>1.1.1</dynamodb-streams-kinesis-adapter.version>
 	</properties>
@@ -123,11 +123,11 @@
 			<artifactId>dynamodb-streams-kinesis-adapter</artifactId>
 			<version>${dynamodb-streams-kinesis-adapter.version}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>DynamoDBLocal</artifactId>
 			<version>${aws.dynamodblocal.version}</version>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<build>
