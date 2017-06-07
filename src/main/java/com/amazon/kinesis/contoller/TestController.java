@@ -21,8 +21,13 @@ public class TestController {
 	}
 
 	@RequestMapping(value = "/sendStream", method = RequestMethod.POST, consumes = "application/json")
-	public String searchUser(@RequestBody String stream) {
+	public String searchStream(@RequestBody String stream) {
 		return "send";
 
+	}
+	
+	@RequestMapping(value = "/sendSampleStream", method = RequestMethod.GET)
+	public String sendSampleStream() throws Exception {
+		return amazonKinesisSerive.sampleStream();
 	}
 }

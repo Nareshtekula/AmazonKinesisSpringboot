@@ -19,22 +19,28 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
-import com.amazonaws.services.kinesis.model.CreateStreamRequest;
-import com.amazonaws.services.kinesis.model.DescribeStreamRequest;
-import com.amazonaws.services.kinesis.model.DescribeStreamResult;
-import com.amazonaws.services.kinesis.model.ListStreamsRequest;
-import com.amazonaws.services.kinesis.model.ListStreamsResult;
-import com.amazonaws.services.kinesis.model.PutRecordRequest;
-import com.amazonaws.services.kinesis.model.PutRecordResult;
-import com.amazonaws.services.kinesis.model.ResourceNotFoundException;
-import com.amazonaws.services.kinesis.model.StreamDescription;
+import com.amazonaws.services.kinesis.AmazonKinesisClientBuilder;
+import com.amazonaws.services.kinesis.model.*; 
+//import com.amazonaws.services.kinesis.model.CreateStreamRequest;
+//import com.amazonaws.services.kinesis.model.DescribeStreamRequest;
+//import com.amazonaws.services.kinesis.model.DescribeStreamResult;
+//import com.amazonaws.services.kinesis.model.ListStreamsRequest;
+//import com.amazonaws.services.kinesis.model.ListStreamsResult;
+//import com.amazonaws.services.kinesis.model.PutRecordRequest;
+//import com.amazonaws.services.kinesis.model.PutRecordResult;
+//import com.amazonaws.services.kinesis.model.ResourceNotFoundException;
+//import com.amazonaws.services.kinesis.model.StreamDescription;
 
 @Service
 public class AmazonKinesisSerive {
@@ -52,9 +58,36 @@ public class AmazonKinesisSerive {
 	 *      the credentials file in your source directory.
 	 */
 
+	@Value("${AWS_ACCESS_KEY_ID}")
+	private static String ACCESS_KEY;
+	
+	@Value("${AWS_SECRET_ACCESS_KEY}")
+	private static String SECRET_ACCESS_KEY;
+	
 	private static AmazonKinesisClient kinesis;
-
+	
+	@PostConstruct
 	private static void init() throws Exception {
+		 
+		AWSCredentials credentials = null;
+		try {
+			credentials = new ProfileCredentialsProvider().getCredentials();
+			BasicAWSCredentials awsCreds = new BasicAWSCredentials(ACCESS_KEY, SECRET_ACCESS_KEY);
+//			kinesis= new AmazonKinesisClient(awsCreds)
+//			AmazonKinesisClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).build();
+		} catch (Exception e) {
+			throw new AmazonClientException(
+					"Cannot load the credentials from the credential profiles file. " +
+							"Please make sure that your credentials file is at the correct " +
+							"location (~/.aws/credentials), and is in valid format.",
+							e);
+		}
+
+		kinesis = new AmazonKinesisClient(credentials);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private static void init1() throws Exception {
 		/*
 		 * The ProfileCredentialsProvider will return your [default]
 		 * credential profile by reading from the credentials file located at
@@ -74,10 +107,10 @@ public class AmazonKinesisSerive {
 		kinesis = new AmazonKinesisClient(credentials);
 	}
 
-	public static void main(String[] args) throws Exception {
-		init();
+	public static String sampleStream() throws Exception {
 
-		final String myStreamName = AmazonKinesisApplication.SAMPLE_APPLICATION_STREAM_NAME;
+//		final String myStreamName = AmazonKinesisApplication.SAMPLE_APPLICATION_STREAM_NAME;
+		final String myStreamName = "myFirstStream";
 		final Integer myStreamSize = 1;
 
 		// Describe the stream and check if it exists.
